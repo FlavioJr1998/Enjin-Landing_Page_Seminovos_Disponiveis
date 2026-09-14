@@ -1,0 +1,67 @@
+body{
+
+    font-family:Arial;
+
+    margin:40px;
+
+    background:#f5f5f5;
+
+}
+
+.info{
+
+    display:flex;
+
+    gap:30px;
+
+    margin-bottom:20px;
+
+}
+
+table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    background:white;
+
+}
+
+th{
+
+    background:#0b3c5d;
+
+    color:white;
+
+}
+
+th,td{
+
+    border:1px solid #ddd;
+
+    padding:12px;
+
+}
+
+tr:nth-child(even){
+
+    background:#f8f8f8;
+
+}
+
+.lotado{
+
+    color:red;
+
+    font-weight:bold;
+
+}
+
+.disponivel{
+
+    color:green;
+
+    font-weight:bold;
+
+}
