@@ -59,6 +59,18 @@ A conta de serviço é montada somente para esse serviço em
 
        docker compose down
 
+O Compose v2 (`docker compose`) é o formato recomendado. Se o LXC ainda tiver
+somente o Compose legado v1, use os comandos equivalentes com hífen:
+
+    docker-compose config --quiet
+    docker-compose up -d --build
+    docker-compose ps
+    docker-compose logs -f app
+
+O arquivo `compose.yaml` mantém compatibilidade com ambos. No Compose v1, o
+nome do projeto é derivado do diretório; use `docker-compose -p seminovos ...`
+caso queira defini-lo explicitamente.
+
 Por padrão, a porta é publicada somente em `127.0.0.1:5000`, apropriado quando
 o proxy reverso está no mesmo LXC. Se o proxy estiver em outro host, ajuste
 `APP_BIND_ADDRESS` para o IP do LXC ou para `0.0.0.0` e restrinja o acesso no
