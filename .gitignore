@@ -1,5 +1,7 @@
 # ambiente
 .env
+.env.*
+!.env_example
 
 # virtualenv
 venv/
@@ -9,10 +11,13 @@ ENV/
 __pycache__/
 *.pyc
 *.pyo
+.pytest_cache/
+.coverage
 
 # logs
 logs/
 
+secrets/
 
 # sistema
 .DS_Store

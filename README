@@ -1,1 +1,89 @@
-Este projeto consiste em consultar a planilha de veiculos seminovos disponiveis e publicar em uma landing page.
+Landing page Flask que consulta a aba `SEMINOVOS` do Google Sheets e publica
+somente Modelo, Ano, KM e Valor de venda.
+
+Configuração
+------------
+
+1. Crie o ambiente virtual e instale `requirements.txt`.
+2. Defina no ambiente as variáveis descritas em `.env_example`.
+3. Compartilhe a planilha com o e-mail da conta de serviço configurada.
+
+O ID da planilha, a URL pública e o caminho das credenciais não possuem valores
+reais no código. Em produção, a aplicação recusa a inicialização se uma dessas
+configurações estiver ausente.
+
+Modos de execução
+-----------------
+
+Homologação usa o servidor de desenvolvimento do Flask, com depuração ativa:
+
+    python app.py --environment homologation
+
+Produção usa o servidor WSGI Waitress, sem depuração:
+
+    python app.py --environment production
+
+Também é possível definir `APP_ENV=production` no ambiente e executar somente:
+
+    python app.py
+
+Host e porta podem ser definidos por `APP_HOST` e `APP_PORT` ou informados na
+linha de comando:
+
+    python app.py --environment production --host 0.0.0.0 --port 5000
+
+Execução com Docker Compose
+---------------------------
+
+O contêiner executa Waitress em modo de produção como usuário sem privilégios.
+A conta de serviço é montada somente para esse serviço em
+`/run/secrets/google_service_account`; ela não é copiada para a imagem.
+
+1. Crie o `.env` a partir de `.env_example` e informe as configurações reais.
+2. Mantenha o JSON da conta de serviço no caminho indicado por
+   `SERVICE_ACCOUNT_SECRET_FILE`.
+3. Construa e inicie em segundo plano:
+
+       docker compose up -d --build
+
+4. Confira o estado e acompanhe os logs:
+
+       docker compose ps
+       docker compose logs -f app
+
+5. Para publicar uma atualização do código:
+
+       docker compose up -d --build --remove-orphans
+
+6. Para interromper a aplicação sem apagar os logs persistidos:
+
+       docker compose down
+
+Por padrão, a porta é publicada somente em `127.0.0.1:5000`, apropriado quando
+o proxy reverso está no mesmo LXC. Se o proxy estiver em outro host, ajuste
+`APP_BIND_ADDRESS` para o IP do LXC ou para `0.0.0.0` e restrinja o acesso no
+firewall. `APP_PUBLISHED_PORT` altera apenas a porta exposta no LXC.
+
+O sistema de arquivos do contêiner é somente leitura, exceto por `/tmp` e pelo
+volume nomeado de logs. O health check consulta `/health` a cada 30 segundos.
+Não use `docker compose down -v` se quiser preservar o volume de logs.
+
+Logs
+----
+
+A aplicação registra inicialização, acessos HTTP, atualizações do cache e falhas
+em `logs/seminovos.log`. A rotação ocorre diariamente e mantém 30 arquivos por
+padrão. `LOG_DIR`, `LOG_LEVEL` e `LOG_RETENTION_DAYS` permitem alterar esse
+comportamento. O diretório `logs/` permanece fora do versionamento.
+
+Cache e endpoints
+-----------------
+
+A consulta é feita sob demanda e mantida em cache pelo período definido em
+`CACHE_TIMEOUT_SECONDS`. Se uma atualização falhar, o último cache válido
+continua disponível e o health check informa estado degradado.
+
+- `/`: catálogo de seminovos.
+- `/api/cache`: cache público contendo apenas os quatro campos permitidos.
+- `/health`: integridade da aplicação e da fonte de dados.
+- `/robots.txt` e `/sitemap.xml`: arquivos para indexadores.

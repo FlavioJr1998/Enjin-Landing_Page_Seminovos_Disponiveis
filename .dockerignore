@@ -1,0 +1,16 @@
+.git
+.gitignore
+.env
+.env.*
+secrets/
+logs/
+venv/
+ENV/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+tests/
+README
+Thumbs.db
+.DS_Store

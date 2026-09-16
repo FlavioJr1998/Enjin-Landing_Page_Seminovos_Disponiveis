@@ -1,108 +1,58 @@
 <!DOCTYPE html>
-
-<html lang="pt-br">
-
+<html lang="pt-BR">
 <head>
-    <title>Agenda Das Oficinas Honda Enjin</title>
-
     <meta charset="UTF-8">
-
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <meta name="revisit-after" content="1 minute">
-
-    <meta name="description"
-        content="Agenda online de horários disponíveis da oficina Honda Enjin para atendimento e agendamento de serviços.">
-
-    <meta name="keywords" content="agenda oficina,honda,enjin,agendamento,serviços,revisão,oficina">
-
-    <meta name="author" content="Enjin Tecnologia">
-
+    <meta name="description" content="Consulte os veículos seminovos disponíveis, com modelo, ano, quilometragem e valor de venda.">
     <meta name="robots" content="index,follow">
-
-    <link rel="canonical" href="https://agendaoficina.enjin.app.br/">
-
+    <link rel="canonical" href="{{ public_base_url }}/">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-
+    <title>Veículos seminovos disponíveis</title>
     <script type="application/ld+json">
         {
-            "@context":"https://schema.org",
-            "@type":"WebPage",
-
-            "name":"Agenda Oficina Honda Enjin",
-
-            "description":"Página que apresenta os horários disponíveis para agendamento da oficina.",
-
-            "url":"https://agendaoficina.enjin.app.br",
-
-            "inLanguage":"pt-BR",
-
-            "publisher":{
-                "@type":"Organization",
-                "name":"Enjin Tecnologia"
-            }
+            "@context": "https://schema.org",
+            "@type": "CollectionPage",
+            "name": "Veículos seminovos disponíveis",
+            "description": "Catálogo de veículos seminovos disponíveis para venda.",
+            "url": {{ (public_base_url ~ '/') | tojson }},
+            "inLanguage": "pt-BR"
         }
     </script>
 </head>
-
 <body>
+    <main>
+        <h1>Veículos Seminovos Disponiveis</h1>
 
-    <h1>Agenda Oficina</h1>
+        {% if status == "degradado" %}
+        <p class="notice" role="status">Exibindo a última atualização disponível.</p>
+        {% endif %}
 
-    <table>
-
-        <thead>
-
-            <tr>
-
-                <th>Data</th>
-
-                <th>Cidade</th>
-
-                <th>Horário</th>
-
-                <th>Capacidade</th>
-
-                <th>Agendados</th>
-
-                <th>Status</th>
-
-            </tr>
-
-        </thead>
-
-        <tbody>
-
-            {% for item in dados %}
-
-            <tr>
-
-                <td>{{ item.DATA }}</td>
-
-                <td>{{ item.CIDADE }}</td>
-
-                <td>{{ item.HORA_INICIO }}</td>
-
-                <td>{{ item.CAPACIDADE_MAX }}</td>
-
-                <td>{{ item.AGENDADOS }}</td>
-
-                <td class="{{ item.STATUS | lower }}">
-
-                    {{ item.STATUS }}
-
-                </td>
-
-            </tr>
-
-            {% endfor %}
-
-        </tbody>
-
-    </table>
-
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col">Modelo</th>
+                        <th scope="col">Ano</th>
+                        <th scope="col">KM</th>
+                        <th scope="col">Valor de venda</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in dados %}
+                    <tr>
+                        <td>{{ item.modelo }}</td>
+                        <td>{{ item.ano }}</td>
+                        <td>{{ item.km }}</td>
+                        <td>{{ item.valor_venda }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td class="empty" colspan="4">Nenhum veículo disponível para exibição.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </main>
 </body>
-
 </html>
