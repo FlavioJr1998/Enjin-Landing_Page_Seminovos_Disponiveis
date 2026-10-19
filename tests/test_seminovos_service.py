@@ -73,6 +73,7 @@ def test_filters_columns_and_uses_cache():
                 " VENDIDO ",
                 "nao-publicar",
             ],
+            ["", "", "", "", "FEIRAUTO", "", ""],
         ]
     )
     clock = [100.0]
@@ -95,6 +96,7 @@ def test_filters_columns_and_uses_cache():
     assert second["dados"] == first["dados"]
     assert "Chassi" not in str(first)
     assert "City" not in str(first)
+    assert "FEIRAUTO" not in str(first)
 
 
 def test_keeps_last_valid_cache_when_refresh_fails():

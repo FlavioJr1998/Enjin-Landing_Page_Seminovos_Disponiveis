@@ -112,6 +112,7 @@ class SeminovosService:
         header_positions = self._header_positions(values[0])
         vehicles = []
         sold_count = 0
+        invalid_count = 0
 
         for row in values[1:]:
             status = self._cell(row, header_positions["status"])
@@ -123,17 +124,24 @@ class SeminovosService:
                 field: self._cell(row, header_positions[field])
                 for field in PUBLIC_FIELDS
             }
-            if any(vehicle.values()):
-                vehicles.append(vehicle)
+            if not vehicle["modelo"]:
+                if any(vehicle.values()):
+                    invalid_count += 1
+                continue
+
+            vehicles.append(vehicle)
 
         logger.info(
             "Filtragem da aba concluída (%d veículo%s publicado%s; "
-            "%d marcado%s como VENDIDO).",
+            "%d marcado%s como VENDIDO; %d linha%s sem modelo ignorada%s).",
             len(vehicles),
             "s" if len(vehicles) != 1 else "",
             "s" if len(vehicles) != 1 else "",
             sold_count,
             "s" if sold_count != 1 else "",
+            invalid_count,
+            "s" if invalid_count != 1 else "",
+            "s" if invalid_count != 1 else "",
         )
 
         return vehicles
