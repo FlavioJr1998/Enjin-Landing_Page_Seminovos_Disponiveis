@@ -17,6 +17,7 @@ from utils.logger import logger
 HEADER_ALIASES = {
     "modelo": {"modelo"},
     "ano": {"ano", "ano modelo", "ano fabricacao"},
+    "cor": {"cor"},
     "km": {"km", "quilometragem", "kilometragem"},
     "valor_venda": {
         "valor",
@@ -26,7 +27,10 @@ HEADER_ALIASES = {
         "preco venda",
         "preco de venda",
     },
+    "status": {"status"},
 }
+
+PUBLIC_FIELDS = ("modelo", "ano", "cor", "km", "valor_venda")
 
 
 class CredentialsConfigurationError(RuntimeError):
@@ -107,14 +111,30 @@ class SeminovosService:
 
         header_positions = self._header_positions(values[0])
         vehicles = []
+        sold_count = 0
 
         for row in values[1:]:
+            status = self._cell(row, header_positions["status"])
+            if _normalize_header(status) == "vendido":
+                sold_count += 1
+                continue
+
             vehicle = {
-                field: self._cell(row, position)
-                for field, position in header_positions.items()
+                field: self._cell(row, header_positions[field])
+                for field in PUBLIC_FIELDS
             }
             if any(vehicle.values()):
                 vehicles.append(vehicle)
+
+        logger.info(
+            "Filtragem da aba concluída (%d veículo%s publicado%s; "
+            "%d marcado%s como VENDIDO).",
+            len(vehicles),
+            "s" if len(vehicles) != 1 else "",
+            "s" if len(vehicles) != 1 else "",
+            sold_count,
+            "s" if sold_count != 1 else "",
+        )
 
         return vehicles
 

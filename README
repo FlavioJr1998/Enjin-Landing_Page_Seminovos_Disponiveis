@@ -1,5 +1,5 @@
 Landing page Flask que consulta a aba `SEMINOVOS` do Google Sheets e publica
-somente Modelo, Ano, KM e Valor de venda.
+somente Modelo, Ano, Cor, KM e Valor de venda. Registros com status VENDIDO não são publicados.
 
 Configuração
 ------------
@@ -96,6 +96,6 @@ A consulta é feita sob demanda e mantida em cache pelo período definido em
 continua disponível e o health check informa estado degradado.
 
 - `/`: catálogo de seminovos.
-- `/api/cache`: cache público contendo apenas os quatro campos permitidos.
+- `/api/cache`: cache público contendo apenas os cinco campos permitidos.
 - `/health`: integridade da aplicação e da fonte de dados.
 - `/robots.txt` e `/sitemap.xml`: arquivos para indexadores.

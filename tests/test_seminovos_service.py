@@ -46,8 +46,33 @@ def build_service(worksheet, clock):
 def test_filters_columns_and_uses_cache():
     worksheet = FakeWorksheet(
         [
-            ["Modelo", "Ano", "Quilometragem", "Valor de venda", "Chassi"],
-            ["Civic", "2023", "18.000", "R$ 129.900", "nao-publicar"],
+            [
+                "Modelo",
+                "Ano",
+                "Cor",
+                "Quilometragem",
+                "Valor de venda",
+                "Status",
+                "Chassi",
+            ],
+            [
+                "Civic",
+                "2023",
+                "Preto",
+                "18.000",
+                "R$ 129.900",
+                "DISPONIVEL",
+                "nao-publicar",
+            ],
+            [
+                "City",
+                "2024",
+                "Prata",
+                "2.000",
+                "R$ 135.000",
+                " VENDIDO ",
+                "nao-publicar",
+            ],
         ]
     )
     clock = [100.0]
@@ -62,17 +87,22 @@ def test_filters_columns_and_uses_cache():
         {
             "modelo": "Civic",
             "ano": "2023",
+            "cor": "Preto",
             "km": "18.000",
             "valor_venda": "R$ 129.900",
         }
     ]
     assert second["dados"] == first["dados"]
     assert "Chassi" not in str(first)
+    assert "City" not in str(first)
 
 
 def test_keeps_last_valid_cache_when_refresh_fails():
     worksheet = FakeWorksheet(
-        [["Modelo", "Ano", "KM", "Valor"], ["HR-V", "2024", "9.500", "150000"]]
+        [
+            ["Modelo", "Ano", "Cor", "KM", "Valor", "Status"],
+            ["HR-V", "2024", "Branco", "9.500", "150000", "DISPONIVEL"],
+        ]
     )
     clock = [100.0]
     service = build_service(worksheet, clock)
@@ -119,7 +149,10 @@ def test_log_explains_missing_service_account_configuration(caplog):
 
 def test_success_log_reports_connection_steps(caplog):
     worksheet = FakeWorksheet(
-        [["Modelo", "Ano", "KM", "Valor"], ["City", "2025", "0", "R$ 120.000"]]
+        [
+            ["Modelo", "Ano", "Cor", "KM", "Valor", "Status"],
+            ["City", "2025", "Cinza", "0", "R$ 120.000", "PREPARANDO"],
+        ]
     )
     service = build_service(worksheet, [100.0])
 

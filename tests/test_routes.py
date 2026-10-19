@@ -17,6 +17,7 @@ class FakeService:
                     {
                         "modelo": "Civic",
                         "ano": "2023",
+                        "cor": "Preto",
                         "km": "18.000",
                         "valor_venda": "R$ 129.900",
                     }
@@ -40,6 +41,7 @@ def test_index_renders_only_public_vehicle_fields():
     assert response.status_code == 200
     assert "Civic" in body
     assert "2023" in body
+    assert "Preto" in body
     assert "18.000" in body
     assert "R$ 129.900" in body
     assert "Chassi" not in body
@@ -59,7 +61,7 @@ def test_cache_api_exposes_only_allowed_sheet_fields():
     vehicle = response.get_json()["dados"][0]
 
     assert response.status_code == 200
-    assert set(vehicle) == {"modelo", "ano", "km", "valor_venda"}
+    assert set(vehicle) == {"modelo", "ano", "cor", "km", "valor_venda"}
 
 
 def test_health_is_degraded_with_stale_valid_cache():

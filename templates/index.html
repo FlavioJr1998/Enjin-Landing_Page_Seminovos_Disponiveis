@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Consulte os veículos seminovos disponíveis, com modelo, ano, quilometragem e valor de venda.">
+    <meta name="description" content="Consulte os veículos seminovos disponíveis, com modelo, ano, cor, quilometragem e valor de venda.">
     <meta name="robots" content="index,follow">
     <link rel="canonical" href="{{ public_base_url }}/">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
@@ -33,6 +33,7 @@
                     <tr>
                         <th scope="col">Modelo</th>
                         <th scope="col">Ano</th>
+                        <th scope="col">Cor</th>
                         <th scope="col">KM</th>
                         <th scope="col">Valor de venda</th>
                     </tr>
@@ -42,12 +43,13 @@
                     <tr>
                         <td>{{ item.modelo }}</td>
                         <td>{{ item.ano }}</td>
+                        <td>{{ item.cor }}</td>
                         <td>{{ item.km }}</td>
                         <td>{{ item.valor_venda }}</td>
                     </tr>
                     {% else %}
                     <tr>
-                        <td class="empty" colspan="4">Nenhum veículo disponível para exibição.</td>
+                        <td class="empty" colspan="5">Nenhum veículo disponível para exibição.</td>
                     </tr>
                     {% endfor %}
                 </tbody>
